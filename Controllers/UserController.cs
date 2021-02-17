@@ -11,11 +11,11 @@ namespace DemoWebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IDataProvider _dataProvider;
 
-        public UsersController(IDataProvider dataProvider)
+        public UserController(IDataProvider dataProvider)
         {
             _dataProvider = dataProvider;
         }
