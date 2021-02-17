@@ -9,10 +9,11 @@ namespace DemoWebAPI.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> UsersList { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.HasDefaultSchema("public");
             base.OnModelCreating(builder);
         }
 

@@ -15,7 +15,7 @@ namespace DemoWebAPI.Data
 
         public List<User> GetAllUsers()
         {
-            return _context.Users.ToList();
+            return _context.UsersList.ToList();
         }
     }
 }
