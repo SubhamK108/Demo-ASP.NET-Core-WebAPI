@@ -23,5 +23,17 @@ namespace DemoWebAPI.Data
             _context.UsersList.Add(user);
             _context.SaveChanges();
         }
+
+        public User GetUser(int id)
+        {
+            return _context.UsersList.FirstOrDefault(x => x.Id == id);
+        }
+
+        public void DeleteUser(int id)
+        {
+            User user = _context.UsersList.FirstOrDefault(x => x.Id == id);
+            _context.UsersList.Remove(user);
+            _context.SaveChanges();
+        }
     }
 }

@@ -37,5 +37,19 @@ namespace DemoWebAPI.Controllers
 
             return BadRequest();
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUser(int id)
+        {
+            User user = _dataProvider.GetUser(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _dataProvider.DeleteUser(id);
+            return Ok();
+        }
     }
 }
