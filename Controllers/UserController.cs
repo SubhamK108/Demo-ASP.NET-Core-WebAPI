@@ -10,7 +10,7 @@ using DemoWebAPI.Data;
 namespace DemoWebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class UserController : ControllerBase
     {
         private readonly IDataProvider _dataProvider;
@@ -24,6 +24,18 @@ namespace DemoWebAPI.Controllers
         public IEnumerable<User> Get()
         {
             return _dataProvider.GetAllUsers();
+        }
+
+        [HttpPost]
+        public IActionResult AddUser([FromBody]User user)
+        {
+            if (ModelState.IsValid)
+            {
+                _dataProvider.AddUser(user);
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }

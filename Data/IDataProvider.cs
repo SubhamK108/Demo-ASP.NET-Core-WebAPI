@@ -6,5 +6,6 @@ namespace DemoWebAPI.Data
     public interface IDataProvider
     {
         List<User> GetAllUsers();
+        void AddUser(User user);
     }
 }

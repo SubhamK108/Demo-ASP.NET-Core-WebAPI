@@ -17,5 +17,11 @@ namespace DemoWebAPI.Data
         {
             return _context.UsersList.ToList();
         }
+
+        public void AddUser(User user)
+        {
+            _context.UsersList.Add(user);
+            _context.SaveChanges();
+        }
     }
 }
