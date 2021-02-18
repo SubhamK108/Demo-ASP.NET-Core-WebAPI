@@ -10,7 +10,7 @@ using DemoWebAPI.Data;
 namespace DemoWebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]/{action}")]
     public class UserController : ControllerBase
     {
         private readonly IDataProvider _dataProvider;
@@ -38,7 +38,7 @@ namespace DemoWebAPI.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteUser(int id)
         {
             User user = _dataProvider.GetUser(id);
