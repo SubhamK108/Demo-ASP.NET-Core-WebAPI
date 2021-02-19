@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace DemoWebAPI.Data
 {
-    public class DataProvider : IDataProvider
+    public class UserDataProvider : IUserDataProvider
     {
         private readonly PostgreSqlContext _context;
 
-        public DataProvider(PostgreSqlContext context)
+        public UserDataProvider(PostgreSqlContext context)
         {
             _context = context;
         }

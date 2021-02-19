@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DemoWebAPI.Data
 {
-    public interface IDataProvider
+    public interface IUserDataProvider
     {
         List<User> GetAllUsers();
         void AddUser(User user);

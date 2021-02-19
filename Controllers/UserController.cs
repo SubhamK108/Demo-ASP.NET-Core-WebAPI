@@ -13,17 +13,17 @@ namespace DemoWebAPI.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IDataProvider _dataProvider;
+        private readonly IUserDataProvider _userDataProvider;
 
-        public UserController(IDataProvider dataProvider)
+        public UserController(IUserDataProvider userDataProvider)
         {
-            _dataProvider = dataProvider;
+            _userDataProvider = userDataProvider;
         }
 
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            return _dataProvider.GetAllUsers();
+            return _userDataProvider.GetAllUsers();
         }
 
         [HttpPost("[action]")]
@@ -31,7 +31,7 @@ namespace DemoWebAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                _dataProvider.AddUser(user);
+                _userDataProvider.AddUser(user);
                 return Ok();
             }
 
@@ -41,14 +41,14 @@ namespace DemoWebAPI.Controllers
         [HttpDelete("[action]/{id:int}")]
         public IActionResult DeleteUser(int id)
         {
-            User user = _dataProvider.GetUser(id);
+            User user = _userDataProvider.GetUser(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            _dataProvider.DeleteUser(id);
+            _userDataProvider.DeleteUser(id);
             return Ok();
         }
     }

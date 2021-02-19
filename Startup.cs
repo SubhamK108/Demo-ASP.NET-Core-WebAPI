@@ -31,7 +31,7 @@ namespace DemoWebAPI
             services.AddControllers();
 
             services.AddDbContext<PostgreSqlContext>(options => options.UseNpgsql(Configuration.GetConnectionString("PostgreSqlDatabase")));
-            services.AddScoped<IDataProvider, DataProvider>();
+            services.AddScoped<IUserDataProvider, UserDataProvider>();
 
             services.AddSwaggerGen(c =>
             {
