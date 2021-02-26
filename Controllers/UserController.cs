@@ -51,5 +51,12 @@ namespace DemoWebAPI.Controllers
             _userDataProvider.DeleteUser(key);
             return Ok();
         }
+
+        [HttpGet("checkforuser/{key}")]
+        public bool CheckForUser(string key)
+        {
+            User user = _userDataProvider.GetUser(key);
+            return (user == null ? false : true);
+        }
     }
 }
