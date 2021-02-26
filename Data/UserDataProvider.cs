@@ -15,24 +15,24 @@ namespace DemoWebAPI.Data
 
         public List<User> GetAllUsers()
         {
-            return _context.UsersList.ToList();
+            return _context.UserList.ToList();
         }
 
         public void AddUser(User user)
         {
-            _context.UsersList.Add(user);
+            _context.UserList.Add(user);
             _context.SaveChanges();
         }
 
-        public User GetUser(int id)
+        public User GetUser(string key)
         {
-            return _context.UsersList.FirstOrDefault(x => x.Id == id);
+            return _context.UserList.FirstOrDefault(x => (x.Username == key || x.Email == key));
         }
 
-        public void DeleteUser(int id)
+        public void DeleteUser(string key)
         {
-            User user = _context.UsersList.FirstOrDefault(x => x.Id == id);
-            _context.UsersList.Remove(user);
+            User user = _context.UserList.FirstOrDefault(x => (x.Username == key || x.Email == key));
+            _context.UserList.Remove(user);
             _context.SaveChanges();
         }
     }

@@ -38,17 +38,17 @@ namespace DemoWebAPI.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("[action]/{id:int}")]
-        public IActionResult DeleteUser(int id)
+        [HttpDelete("[action]/{key}")]
+        public IActionResult DeleteUser(string key)
         {
-            User user = _userDataProvider.GetUser(id);
+            User user = _userDataProvider.GetUser(key);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            _userDataProvider.DeleteUser(id);
+            _userDataProvider.DeleteUser(key);
             return Ok();
         }
     }

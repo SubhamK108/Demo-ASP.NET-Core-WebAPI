@@ -9,10 +9,12 @@ namespace DemoWebAPI.Data
         {
         }
 
-        public DbSet<User> UsersList { get; set; }
+        public DbSet<User> UserList { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<User>().HasKey(user => user.Email);
+            builder.Entity<User>().HasIndex(user => user.Username).IsUnique();
             builder.HasDefaultSchema("public");
             base.OnModelCreating(builder);
         }
