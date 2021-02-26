@@ -7,7 +7,7 @@ namespace DemoWebAPI.Data
     {
         List<User> GetAllUsers();
         void AddUser(User user);
-        User GetUser(string username);
-        void DeleteUser(string username);
+        User GetUser(string key);
+        void DeleteUser(string key);
     }
 }
