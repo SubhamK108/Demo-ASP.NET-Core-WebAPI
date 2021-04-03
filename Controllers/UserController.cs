@@ -38,6 +38,13 @@ namespace DemoWebAPI.Controllers
             return BadRequest();
         }
 
+        [HttpGet("GetUser/{key}")]
+        public User GetUser(string key)
+        {
+            User user = _userDataProvider.GetUser(key);
+            return user;
+        }
+
         [HttpDelete("[action]/{key}")]
         public IActionResult DeleteUser(string key)
         {
