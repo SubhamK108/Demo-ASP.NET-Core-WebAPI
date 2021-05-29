@@ -21,6 +21,13 @@ namespace DemoWebAPI.Services
         public User GetUser(string key) => 
             _db.UserList.FirstOrDefault(x => (x.Email == key || x.Username == key));
 
+        public void UpdateUser(User existingUser, User updatedUser)
+        {
+            existingUser.Name = updatedUser.Name;
+            existingUser.Password = updatedUser.Password;
+            _db.SaveChanges();
+        }
+
         public void DeleteUser(User user)
         {
             _db.UserList.Remove(user);

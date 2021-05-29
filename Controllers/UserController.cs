@@ -21,7 +21,7 @@ namespace DemoWebAPI.Controllers
         public ActionResult<List<User>> Get() => _user.GetAllUsers();
 
         [HttpPost("[action]")]
-        public ActionResult AddUser([FromBody]User user)
+        public ActionResult AddUser([FromBody] User user)
         {
             if (ModelState.IsValid)
             {
@@ -42,6 +42,24 @@ namespace DemoWebAPI.Controllers
             }
 
             return user;
+        }
+
+        [HttpPut("[action]/{key}")]
+        public ActionResult UpdateUser(string key, [FromBody] User user)
+        {
+            if (! ModelState.IsValid && key != user.Username && key != user.Email)
+            {
+                return BadRequest();
+            }
+
+            User existingUser = _user.GetUser(key);
+            if (existingUser is null)
+            {
+                return NotFound();
+            }
+
+            _user.UpdateUser(existingUser, user);
+            return Ok();
         }
 
         [HttpDelete("[action]/{key}")]
