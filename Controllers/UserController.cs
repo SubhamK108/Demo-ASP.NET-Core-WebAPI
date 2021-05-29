@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using DemoWebAPI.Models;
-using DemoWebAPI.Data;
+using DemoWebAPI.Services;
 
 namespace DemoWebAPI.Controllers
 {
@@ -13,57 +13,55 @@ namespace DemoWebAPI.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserDataProvider _userDataProvider;
+        private readonly UserService _user;
 
-        public UserController(IUserDataProvider userDataProvider)
-        {
-            _userDataProvider = userDataProvider;
-        }
+        public UserController(UserService user) => _user = user;
 
         [HttpGet]
-        public IEnumerable<User> Get()
-        {
-            return _userDataProvider.GetAllUsers();
-        }
+        public ActionResult<List<User>> Get() => _user.GetAllUsers();
 
         [HttpPost("[action]")]
-        public IActionResult AddUser([FromBody]User user)
+        public ActionResult AddUser([FromBody]User user)
         {
             if (ModelState.IsValid)
             {
-                _userDataProvider.AddUser(user);
+                _user.AddUser(user);
                 return Ok();
             }
 
             return BadRequest();
         }
 
-        [HttpGet("GetUser/{key}")]
-        public User GetUser(string key)
+        [HttpGet("[action]/{key}")]
+        public ActionResult<User> GetUser(string key)
         {
-            User user = _userDataProvider.GetUser(key);
-            return user;
-        }
-
-        [HttpDelete("[action]/{key}")]
-        public IActionResult DeleteUser(string key)
-        {
-            User user = _userDataProvider.GetUser(key);
-
-            if (user == null)
+            User user = _user.GetUser(key);
+            if (user is null)
             {
                 return NotFound();
             }
 
-            _userDataProvider.DeleteUser(key);
+            return user;
+        }
+
+        [HttpDelete("[action]/{key}")]
+        public ActionResult DeleteUser(string key)
+        {
+            User user = _user.GetUser(key);
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            _user.DeleteUser(user);
             return Ok();
         }
 
-        [HttpGet("checkforuser/{key}")]
-        public bool CheckForUser(string key)
+        [HttpGet("[action]/{key}")]
+        public ActionResult<bool> CheckForUser(string key)
         {
-            User user = _userDataProvider.GetUser(key);
-            return (user == null ? false : true);
+            User user = _user.GetUser(key);
+            return (user is null ? false : true);
         }
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using DemoWebAPI.Data;
+using DemoWebAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace DemoWebAPI
@@ -31,7 +31,7 @@ namespace DemoWebAPI
             services.AddControllers();
 
             services.AddDbContext<PostgreSqlContext>(options => options.UseNpgsql(Configuration.GetConnectionString("PostgreSqlDatabase")));
-            services.AddScoped<IUserDataProvider, UserDataProvider>();
+            services.AddScoped<UserService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -40,7 +40,7 @@ namespace DemoWebAPI
 
             services.AddCors(options =>
             {
-                options.AddPolicy("DemoAPI", builder =>
+                options.AddPolicy("DemoWebAPI", builder =>
                 {
                     builder.WithOrigins("*")
                         .AllowAnyHeader()
@@ -67,7 +67,7 @@ namespace DemoWebAPI
 
             app.UseRouting();
 
-            app.UseCors("DemoAPI");
+            app.UseCors("DemoWebAPI");
 
             app.UseAuthorization();
 

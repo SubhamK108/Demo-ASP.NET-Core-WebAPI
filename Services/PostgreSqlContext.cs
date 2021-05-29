@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DemoWebAPI.Models;
 
-namespace DemoWebAPI.Data
+namespace DemoWebAPI.Services
 {
     public class PostgreSqlContext : DbContext
     {
