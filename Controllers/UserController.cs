@@ -47,7 +47,6 @@ namespace DemoWebAPI.Controllers
         [HttpPut("[action]/{key}")]
         public ActionResult UpdateUser(string key, [FromBody] User user)
         {
-            // if (! ModelState.IsValid && key != user.Username && key != user.Email)
             if (! ModelState.IsValid)
             {
                 return BadRequest();
