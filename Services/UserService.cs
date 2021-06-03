@@ -24,6 +24,8 @@ namespace DemoWebAPI.Services
         public void UpdateUser(User existingUser, User updatedUser)
         {
             existingUser.Name = updatedUser.Name;
+            existingUser.Username = updatedUser.Username;
+            existingUser.Email = updatedUser.Email;
             existingUser.Password = updatedUser.Password;
             _db.SaveChanges();
         }
