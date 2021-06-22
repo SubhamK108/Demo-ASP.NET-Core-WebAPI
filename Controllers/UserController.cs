@@ -22,10 +22,10 @@ namespace DemoWebAPI.Controllers
             if (ModelState.IsValid)
             {
                 _user.AddUser(user);
-                return Ok();
+                return Ok("User successfully added.");
             }
 
-            return BadRequest();
+            return BadRequest("Invalid user credentials!");
         }
 
         [HttpGet("[action]/{key}")]
@@ -34,10 +34,10 @@ namespace DemoWebAPI.Controllers
             User user = _user.GetUser(key);
             if (user is null)
             {
-                return NotFound();
+                return NotFound("User not found!");
             }
 
-            return user;
+            return Ok(user);
         }
 
         [HttpPut("[action]/{key}")]
@@ -45,17 +45,17 @@ namespace DemoWebAPI.Controllers
         {
             if (! ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("Invalid user credentials!");
             }
 
             User existingUser = _user.GetUser(key);
             if (existingUser is null)
             {
-                return NotFound();
+                return NotFound("User not found!");
             }
 
             _user.UpdateUser(existingUser, user);
-            return Ok();
+            return Ok("User successfully updated.");
         }
 
         [HttpDelete("[action]/{key}")]
@@ -64,18 +64,18 @@ namespace DemoWebAPI.Controllers
             User user = _user.GetUser(key);
             if (user is null)
             {
-                return NotFound();
+                return NotFound("User not found!");
             }
 
             _user.DeleteUser(user);
-            return Ok();
+            return Ok("User successfully deleted.");
         }
 
         [HttpGet("[action]/{key}")]
         public ActionResult<bool> CheckForUser(string key)
         {
             User user = _user.GetUser(key);
-            return (user is null ? false : true);
+            return Ok(user is null ? false : true);
         }
     }
 }
