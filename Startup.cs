@@ -32,6 +32,7 @@ namespace DemoWebAPI
 
             services.AddDbContext<PostgreSqlContext>(options => options.UseNpgsql(Configuration.GetConnectionString("PostgreSqlDatabase")));
             services.AddScoped<UserService>();
+            services.AddScoped<JwtService>();
 
             services.AddSwaggerGen(c =>
             {
@@ -42,7 +43,9 @@ namespace DemoWebAPI
             {
                 options.AddPolicy("DemoWebAPI", builder =>
                 {
-                    builder.WithOrigins("*")
+                    builder
+                        .SetIsOriginAllowed(_ => true)
+                        .AllowCredentials()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });

@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using DemoWebAPI.Models;
+using DemoWebAPI.Dtos;
 using DemoWebAPI.Services;
+using static BCrypt.Net.BCrypt;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace DemoWebAPI.Controllers
 {
@@ -10,8 +13,13 @@ namespace DemoWebAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService _user;
+        private readonly JwtService _jwtService;
 
-        public UserController(UserService user) => _user = user;
+        public UserController(UserService user, JwtService jwtService)
+        {
+            _user = user;
+            _jwtService = jwtService;
+        }
 
         [HttpGet]
         public ActionResult<List<User>> Get() => _user.GetAllUsers();
@@ -37,13 +45,13 @@ namespace DemoWebAPI.Controllers
                 return NotFound("User not found!");
             }
 
-            return Ok(user);
+            return user;
         }
 
         [HttpPut("[action]/{key}")]
         public ActionResult UpdateUser(string key, [FromBody] User user)
         {
-            if (! ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid user credentials!");
             }
@@ -54,6 +62,7 @@ namespace DemoWebAPI.Controllers
                 return NotFound("User not found!");
             }
 
+            user.Password = HashPassword(user.Password);
             _user.UpdateUser(existingUser, user);
             return Ok("User successfully updated.");
         }
@@ -75,7 +84,59 @@ namespace DemoWebAPI.Controllers
         public ActionResult<bool> CheckForUser(string key)
         {
             User user = _user.GetUser(key);
-            return Ok(user is null ? false : true);
+            return (user is null ? false : true);
+        }
+
+        [HttpPost("[action]")]
+        public ActionResult Register([FromBody] User user)
+        {
+            if (ModelState.IsValid)
+            {
+                user.Password = HashPassword(user.Password);
+                _user.AddUser(user);
+                return Ok("User successfully registered.");
+            }
+
+            return BadRequest("Invalid user credentials!");
+        }
+
+        [HttpPost("[action]")]
+        public ActionResult Login([FromBody] UserDto user)
+        {
+            User requestedUser = _user.GetUser(user.Key);
+            if (requestedUser is null || !Verify(user.Password, requestedUser.Password))
+            {
+                return NotFound("Invalid Credentials!");
+            }
+
+            string jwt = _jwtService.Generate(requestedUser.Email);
+            Response.Cookies.Append("jwt", jwt);
+            return Ok("Login Successfull.");
+        }
+
+        [HttpGet("[action]")]
+        public ActionResult<User> AuthenticatedUser()
+        {
+            try
+            {
+                string jwt = Request.Cookies["jwt"];
+                JwtSecurityToken verifiedToken = _jwtService.Verify(jwt);
+                string key = verifiedToken.Issuer;
+                User user = _user.GetUser(key);
+                return user;
+            }
+            catch
+            {
+                return Unauthorized("Invalid Token");
+            }
+
+        }
+
+        [HttpPost("[action]")]
+        public ActionResult Logout()
+        {
+            Response.Cookies.Delete("jwt");
+            return Ok("Logout Successfull.");
         }
     }
 }
