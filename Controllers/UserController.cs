@@ -5,6 +5,7 @@ using DemoWebAPI.Dtos;
 using DemoWebAPI.Services;
 using static BCrypt.Net.BCrypt;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Http;
 
 namespace DemoWebAPI.Controllers
 {
@@ -29,6 +30,7 @@ namespace DemoWebAPI.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.Password = HashPassword(user.Password);
                 _user.AddUser(user);
                 return Ok("User successfully added.");
             }
@@ -62,7 +64,15 @@ namespace DemoWebAPI.Controllers
                 return NotFound("User not found!");
             }
 
-            user.Password = HashPassword(user.Password);
+            if (user.Password.Equals(""))
+            {
+                user.Password = existingUser.Password;
+            }
+            else
+            {
+                user.Password = HashPassword(user.Password);
+            }
+
             _user.UpdateUser(existingUser, user);
             return Ok("User successfully updated.");
         }
@@ -110,7 +120,13 @@ namespace DemoWebAPI.Controllers
             }
 
             string jwt = _jwtService.Generate(requestedUser.Email);
-            Response.Cookies.Append("jwt", jwt);
+            Response.Cookies.Append("jwt", jwt, new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Secure = true
+            });
+
             return Ok("Login Successfull.");
         }
 
@@ -135,7 +151,13 @@ namespace DemoWebAPI.Controllers
         [HttpPost("[action]")]
         public ActionResult Logout()
         {
-            Response.Cookies.Delete("jwt");
+            Response.Cookies.Delete("jwt", new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Secure = true
+            });
+
             return Ok("Logout Successfull.");
         }
     }
